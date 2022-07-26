@@ -6,14 +6,13 @@ import {
   Link,
   Box,
   Button,
+  Typography,
+  IconButton,
   Menu,
   MenuItem,
-  Container,
-  Tooltip,
+  Container,  
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
-import TelegramIcon from "@mui/icons-material/Telegram";
-import TwitterIcon from "@mui/icons-material/Twitter";
 
 // import DiscordIcon from "assets/images/discord-brands.svg";
 import LogoImage from "../../assets/images/logo.png";
@@ -42,19 +41,19 @@ const menuLists = [
 
 const Header = () => {
   const history = useNavigate();
+  
+  const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);   
 
-  const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
+  const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorElNav(event.currentTarget);
+  };  
 
-  const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorElUser(event.currentTarget);
-  };
-
-  const handleCloseUserMenu = () => {
-    setAnchorElUser(null);
+  const handleCloseNavMenu = () => {
+    setAnchorElNav(null);
   };
 
   const handleClickMenu = (link: string) => {
-    handleCloseUserMenu();
+    handleCloseNavMenu();
     history(link);
   };
 
@@ -82,77 +81,62 @@ const Header = () => {
           </Box> */}
 
           <Box sx={{ display: "flex", alignItems: "center", columnGap: "8px" }}>
-            <Box
-              className="social-buttons"
-              sx={{ display: { xs: "none", sm: "flex" } }}
-            >
-              <Button
-                href="https://twitter.com/@neutronminer"
-                target="_blank"
-                rel="noreferrer"
-                className="social-button"
-                variant="contained"
-                color="primary"
-              >
-                <TwitterIcon sx={{ color: "#fff" }} />
-              </Button>
-              <Button
-                href="https://t.me/neutronnft"
-                target="_blank"
-                rel="noreferrer"
-                className="social-button"
-                variant="contained"
-                color="primary"
-              >
-                <TelegramIcon sx={{ color: "#fff" }} />
-              </Button>
-              <Button
-                href="https://discord.gg/4MKTmJXXby"
-                target="_blank"
-                rel="noreferrer"
-                className="social-button"
-                variant="contained"
-                color="primary"
-              >
-                {/* <Box component="img" src={DiscordIcon} alt="" /> */}
-              </Button>
-            </Box>
-            {/* <Web3Status /> */}
-            <Box sx={{display: { sm: "block", md: "none" } }}>
-                <Tooltip title="Open Menu">
+            <Box sx={{ flexGrow: 1, display: { xs: 'none', lg: 'flex' } }}>
+                {menuLists.map((menulist, key) => (
                 <Button
-                    onClick={handleOpenUserMenu}
-                    className="menu-button"
-                    variant="contained"
-                    color="primary"
+                    key={key}
+                    onClick={() => handleClickMenu(menulist.link)}
+                    sx={{ my: 2, mx: 2, color: 'white', display: 'block' }}
                 >
-                    <MenuIcon sx={{ color: "#fff" }} />
+                    {menulist.text}
                 </Button>
-                </Tooltip>
+                ))}
+                
             </Box>
-            <Menu
-              sx={{ mt: "45px" }}
-              id="menu-appbar"
-              anchorEl={anchorElUser}
-              anchorOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
+            <Button sx={{ my: {xs: 1, sm: 2}, display: {xs: 'none', sm: 'block'}, paddingX: '12px', paddingY: '4px', color: 'white', border: 1, borderRadius: '20px' }}
             >
-              {menuLists.map((list, key) => (
-                <MenuItem key={key} onClick={() => handleClickMenu(list.link)}>
-                  {list.text}
-                </MenuItem>
-              ))}
-            </Menu>
-          </Box>
+                JOIN DISCORD
+            </Button>
+
+            
+            <Box sx={{ flexGrow: 1, display: { xs: 'flex', lg: 'none' } }}>
+                <IconButton
+                size="large"
+                aria-label="account of current user"
+                aria-controls="menu-appbar"
+                aria-haspopup="true"
+                onClick={handleOpenNavMenu}
+                color="inherit"
+                >
+                <MenuIcon />
+                </IconButton>
+                <Menu
+                id="menu-appbar"
+                anchorEl={anchorElNav}
+                anchorOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'left',
+                }}
+                keepMounted
+                transformOrigin={{
+                    vertical: 'top',
+                    horizontal: 'left',
+                }}
+                open={Boolean(anchorElNav)}
+                onClose={handleCloseNavMenu}
+                sx={{
+                    display: { xs: 'block', lg: 'none' },
+                }}
+                >
+                {menuLists.map((menulist, key) => (
+                    <MenuItem key={key} onClick={() => handleClickMenu(menulist.link)}>
+                    <Typography textAlign="center">{menulist.text}</Typography>
+                    </MenuItem>
+                ))}
+                </Menu>
+            </Box>
+            {/* <Web3Status /> */}   
+            </Box>         
         </Toolbar>
       </Container>
     </AppBar>
